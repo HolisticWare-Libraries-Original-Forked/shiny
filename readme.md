@@ -1,109 +1,79 @@
-﻿# Shiny for Xamarin & Windows 
-<img src="art/logo.png" width="100" /> 
+﻿# Shiny v4 for .NET
+<img src="https://github.com/shinyorg/shiny/raw/master/art/logo.png" width="100" /> 
+
+Shiny is a cross platform framework designed to make working with device services and background processes easy, testable, and consistent while bringing
+things like dependency injection & logging in a structured way to your code!
+
+## Supports
+* .NET 8 for Android
+* .NET 8 for iOS
+* .NET 8 for MacCatalyst
+
+## Features
+* Handles all of the cruft like Permissions, main thread traversal, persistent storage and app restarts
+* Brings your infrastructure to the background
+* Provides logging to ensure you know when your services fail in the background 
+* Gives a clean & testable API surface for your code
+* Periodic Background Jobs
+* BLE Client & Hosting
+* Beacons Ranging & Monitoring
+* Locations - GPS & Geofencing
+* Push Notification - Native, Azure Notifications Hubs, Firebase, and more
+* Local Notifications - best of breed local notifications supporting almost all features across all of the supported platforms
+
+## Links
+* [Documentation](https://shinylib.net)
+* [Change Log](https://shinylib.net/release-notes/client/)
+* [Community Support](https://github.com/shinyorg/shiny/discussions)
+* [NuGets](https://www.nuget.org/profiles/ShinyLib)
+* Samples
+    * [MAUI - Kitchen Sink](https://github.com/shinyorg/shiny/tree/master/samples/Sample.Maui)
+    * [Push](https://github.com/shinyorg/pushtester)
+    * [BLE Client & Hosting](https://github.com/aritchie/digitalscoreboard)
 
 
-Formerly the ACR Plugins
+## Visual Studio Templates
 
-* [Samples](https://github.com/shinyorg/shinysamples) - Shows almost every single function point within Shiny
-* [Beautiful Docs](https://shinylib.net) are in the works - for now, take a look here:
-  * [Introducing Shiny](https://allancritchie.net/posts/introducingshiny)
-  * [Background Jobs - Shiny Style](https://allancritchie.net/posts/shinyjobs)
-  * [Settings in a New Light - Shiny Style](https://allancritchie.net/posts/shinysettings)
-  * [Geofencing with a Pinch of Notifications - Shiny Style](https://allancritchie.net/posts/shiny-geofencing)
-  * [Startup Tasks, Modules, and Stateful Delegates - Shiny Style](https://allancritchie.net/posts/shiny-di)
-  * [Beacons - Shiny Style](https://allancritchie.net/posts/shiny-beacons)
-  
-  
-## Builds
+These templates will help get you up & running quickly.  Simply select what features of Shiny you want to use and they will wire up everything from permissions to app configuration.
 
-Branch|Status
-------|------
-Master|[![Build status](https://dev.azure.com/shinylib/shiny/_apis/build/status/Build?branchName=master)](https://dev.azure.com/shinylib/shiny/_build/latest?definitionId=1)
-Dev|[![Build status](https://dev.azure.com/shinylib/shiny/_apis/build/status/Build?branchName=dev)](https://dev.azure.com/shinylib/shiny/_build/latest?definitionId=1)|
+[GitHub](https://github.com/shinyorg/templates)
+![NuGet](https://img.shields.io/nuget/v/shiny.templates?style=for-the-badge)
 
+> dotnet new --install Shiny.Templates
 
-## NuGet Packages
+## Integrating With Existing Apps
 
-Shiny official releases are available on NuGet. For early test builds, you can also use the beta MyGet feed.
+If you cannot use our awesome templates - try our ugly, but effective boilerplate builder at:
+[https://shinylib.net/client/appbuilder/](https://shinylib.net/client/appbuilder/)
 
-To use the beta MyGet feed, add `https://www.myget.org/F/acrfeed/api/v3/index.json` as a package source to Visual Studio
+## Support Shiny!
 
+While Shiny is free and will continue to be so, maintenance and support takes a heavy toll on sustainability. If you or your company have the resources, please consider becoming a GitHub Sponsor. GitHub Sponsorships help to make Open Source Development more sustainable.
 
-## Libraries
+Depending on your Sponsorship Tier, you may also get access to some great benefits on Sponsor Connect (https://sponsorconnect.dev) including:
+- The Sponsor Only Discord server
+- Training available ONLY to sponsors on Sponsor Connect
+- Special sponsor-only packages
 
-|Project|NuGet|MyGet|
-|-------|-----|-----|
-|Core | [![CoreNugetShield]][CoreNuget] | [![CoreMygetShield]][CoreMyget] |
-|Beacons | [![BeaconsNugetShield]][BeaconsNuget] | [![BeaconsMygetShield]][BeaconsMyget] |
-|BluetoothLE| [![BleNugetShield]][BleNuget] | [![BleMygetShield]][BleMyget] |
-|Locations| [![LocationsNugetShield]][LocationsNuget] | [![LocationsMygetShield]][LocationsMyget] |
-|HTTP Transfers| [![HttpNugetShield]][HttpNuget] | [![HttpMygetShield]][HttpMyget] |
-|Sensors| [![SensorsNugetShield]][SensorsNuget] | [![SensorsMygetShield]][SensorsMyget] |
-|Notifications| [![NotificationsNugetShield]][NotificationsNuget] | [![NotificationsMygetShield]][NotificationsMyget] |
+[https://sponsor.shinylib.net](https://sponsor.shinylib.net)
 
-## Integrations
-|Project|NuGet|MyGet|Description|
-|-------|-----|-----|-----------|
-|SQLite| [![SqliteNugetShield]][SqliteNuget] | [![SqliteMygetShield]][SqliteMyget] | Provides caching, logging, storage, & settings implementations
-|AppCenter Logging| [![AppCenterNugetShield]][AppCenterNuget] | [![AppCenterMygetShield]][AppCenterMyget] | Log errors to AppCenter
-|System.Text.Json Serializer| [![AppCenterNugetShield]][AppCenterNuget] | [![AppCenterMygetShield]][AppCenterMyget] | This is the new .NET serializer coming into modern .NET.  This will eventually be standard in Shiny
-|(Android) Current Activity| [![CurrentActivityNugetShield]][CurrentActivityNuget] | [![CurrentActivityMygetShield]][CurrentActivityMyget] | If you use James Montemagno's current top activity plugin, Shiny can use it instead of its internal version
+How about some [Shiny Gear](https://www.redbubble.com/shop/ap/45038461)
+
+## Premium Paid Support
+
+Looking for consulting for your .NET applications and Shiny, you can now book a time with Allan Ritchie on here: [1-1 Consulting Session](https://superpeer.com/allanritchie/-/1-on-1-development-help)
+
 
 ## Contributors
 * [Allan Ritchie](https://github.com/aritchie) - Project Lead
+* [Dan Siegel](https://github.com/dansiegel) - Contributor
 * [Emily Stanek](https://github.com/emilystanek) - Logo Designer
 
-[BeaconsNugetShield]: https://img.shields.io/nuget/v/Shiny.Beacons.svg
-[BeaconsNuget]: https://www.nuget.org/packages/Shiny.Beacons/
-[BeaconsMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Beacons.svg
-[BeaconsMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Beacons
 
-[CoreNugetShield]: https://img.shields.io/nuget/v/Shiny.Core.svg
-[CoreNuget]: https://www.nuget.org/packages/Shiny.Core/
-[CoreMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Core.svg
-[CoreMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Core
+![Alt](https://repobeats.axiom.co/api/embed/83185f7533b7bee4a7e92e6943b686d11af40157.svg "Repobeats analytics image")
 
-[BleNugetShield]: https://img.shields.io/nuget/v/Shiny.BluetoothLE.svg
-[BleNuget]: https://www.nuget.org/packages/Shiny.BluetoothLE/
-[BleMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.BluetoothLE.svg
-[BleMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.BluetoothLE
 
-[LocationsNugetShield]: https://img.shields.io/nuget/v/Shiny.Locations.svg
-[LocationsNuget]: https://www.nuget.org/packages/Shiny.Locations/
-[LocationsMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Locations.svg
-[LocationsMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Locations
+## Podcasting
+For more info on Shiny and other great .NET content, listen to [Jon Dick (aka Redth)](https://github.com/redth) and [Allan Ritchie (Author of Shiny)](https://github.com/aritchie) every week at:
 
-[SensorsNugetShield]: https://img.shields.io/nuget/v/Shiny.Sensors.svg
-[SensorsNuget]: https://www.nuget.org/packages/Shiny.Sensors/
-[SensorsMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Sensors.svg
-[SensorsMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Sensors
-
-[HttpNugetShield]: https://img.shields.io/nuget/v/Shiny.Net.Http.svg
-[HttpNuget]: https://www.nuget.org/packages/Shiny.Net.Http/
-[HttpMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Net.Http.svg
-[HttpMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Net.Http
-
-[NotificationsNugetShield]: https://img.shields.io/nuget/v/Shiny.Notifications.svg
-[NotificationsNuget]: https://www.nuget.org/packages/Shiny.Notifications/
-[NotificationsMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Notifications.svg
-[NotificationsMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Notifications
-
-[SqliteNugetShield]: https://img.shields.io/nuget/v/Shiny.Integrations.Sqlite.svg
-[SqliteNuget]: https://www.nuget.org/packages/Shiny.Integrations.Sqlite/
-[SqliteMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Integrations.Sqlite.svg
-[SqliteMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Integrations.Sqlite
-
-[AppCenterNugetShield]: https://img.shields.io/nuget/v/Shiny.Logging.AppCenter.svg
-[AppCenterNuget]: https://www.nuget.org/packages/Shiny.Logging.AppCenter/
-[AppCenterMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Logging.AppCenter.svg
-[AppCenterMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Logging.AppCenter
-
-[CurrentActivityNugetShield]: https://img.shields.io/nuget/v/Shiny.Integrations.CurrentActivityPlugin.svg
-[CurrentActivityNuget]: https://www.nuget.org/packages/Shiny.Integrations.CurrentActivityPlugin/
-[CurrentActivityMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Integrations.CurrentActivityPlugin.svg
-[CurrentActivityMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Integrations.CurrentActivityPlugin
-
-[SysTextJsonNugetShield]: https://img.shields.io/nuget/v/Shiny.Integrations.SysTextJson.svg
-[SysTextJsonNuget]: https://www.nuget.org/packages/Shiny.Integrations.SysTextJson/
-[SysTextJsonMygetShield]: https://img.shields.io/myget/acrfeed/vpre/Shiny.Integrations.SysTextJson.svg
-[SysTextJsonMyget]: https://www.myget.org/feed/acrfeed/package/nuget/Shiny.Integrations.SysTextJson
+<a href="https://gonemobile.io"><img src="art/gonemobile.jpg" width="200" /></a>

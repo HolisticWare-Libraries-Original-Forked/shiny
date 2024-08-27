@@ -1,73 +1,54 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using Shiny.BluetoothLE.Central;
-using Shiny.BluetoothLE.Peripherals;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Shiny.BluetoothLE;
+using Shiny.BluetoothLE.Infrastructure;
+
+namespace Shiny;
 
 
-namespace Shiny
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    /// <summary>
+    /// Register the IBleManager service that allows you to connect to other BLE devices - Delegates used here are intended for background usage
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="config"></param>
+    /// <param name="delegateType"></param>
+    /// <returns></returns>
+#if APPLE
+    public static IServiceCollection AddBluetoothLE(this IServiceCollection services, Type? delegateType = null, AppleBleConfiguration? config = null)
     {
-        /// <summary>
-        /// Register the ICentralManager service that allows you to connect to other BLE devices - Delegates used here are intended for background usage
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="config"></param>
-        /// <param name="delegateType"></param>
-        /// <returns></returns>
-        public static bool UseBleCentral(this IServiceCollection services, Type delegateType, BleCentralConfiguration config = null)
-        {
-            if (services.UseBleCentral(config))
-            {
-                if (delegateType != null)
-                    services.AddSingleton(typeof(IBleCentralDelegate), delegateType);
-                return true;
-            }
-            return false;
-        }
+        services.TryAddSingleton(config ?? new AppleBleConfiguration());
 
-
-        /// <summary>
-        /// Register the ICentralManager service that allows you to connect to other BLE devices - Delegates used here are intended for background usage
-        /// </summary>
-        /// <typeparam name="TCentralDelegate"></typeparam>
-        /// <param name="services"></param>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        public static bool UseBleCentral<TCentralDelegate>(this IServiceCollection services, BleCentralConfiguration config = null) where TCentralDelegate : class, IBleCentralDelegate
-            => services.UseBleCentral(typeof(TCentralDelegate), config);
-
-
-        /// <summary>
-        /// Register the ICentralManager service that allows you to connect to other BLE devices
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        public static bool UseBleCentral(this IServiceCollection builder, BleCentralConfiguration config = null)
-        {
-#if NETSTANDARD
-            return false;
-#else
-            builder.RegisterModule(new BleCentralShinyModule(config ?? new BleCentralConfiguration()));
-            return true;
+#elif ANDROID || WINDOWS
+    public static IServiceCollection AddBluetoothLE(this IServiceCollection services, Type? delegateType = null)
+    {       
 #endif
-        }
+        if (!services.HasImplementation<BleManager>())
+            services.AddShinyService<BleManager>();
 
+        if (delegateType != null)
+            services.AddShinyService(delegateType);
 
-        /// <summary>
-        /// Registers the IPeripheralManager service that allows you to be a host BLE device
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static bool UseBlePeripherals(this IServiceCollection builder)
-        {
-#if NETSTANDARD
-            return false;
-#else
-            builder.AddSingleton<IPeripheralManager, PeripheralManager>();
-            return true;
-#endif
-        }
+        services.TryAddSingleton<IOperationQueue, SemaphoreOperationQueue>();
+        return services;
     }
+
+
+    /// <summary>
+    /// Register the ICentralManager service that allows you to connect to other BLE devices - Delegates used here are intended for background usage
+    /// </summary>
+    /// <typeparam name="TCentralDelegate"></typeparam>
+    /// <param name="services"></param>
+    /// <param name="config"></param>
+    /// <returns></returns>
+#if APPLE
+    public static IServiceCollection AddBluetoothLE<TCentralDelegate>(this IServiceCollection services, AppleBleConfiguration? config = null) where TCentralDelegate : class, IBleDelegate
+        => services.AddBluetoothLE(typeof(TCentralDelegate), config);
+
+#else
+    public static IServiceCollection AddBluetoothLE<TCentralDelegate>(this IServiceCollection services) where TCentralDelegate : class, IBleDelegate
+        => services.AddBluetoothLE(typeof(TCentralDelegate));
+#endif
 }

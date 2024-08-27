@@ -1,38 +1,12 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <TargetFrameworks>$(DefaultTargetFrameworks)</TargetFrameworks>
         <Description>Shiny addon for adding upload and download management to your app (with metrics!)</Description>
-        <TargetFrameworks>netstandard2.0;xamarin.ios10;monoandroid90</TargetFrameworks>
-        <TargetFrameworks Condition=" $(OS) == 'WINDOWS_NT' ">uap10.0.16299;$(TargetFrameworks)</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="readme.txt" pack="true" PackagePath="." />
-        <Compile Remove="Platforms\**\*.cs" />
-        <None Include="Platforms\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
         <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
+        <ProjectReference Include="..\Shiny.Support.DeviceMonitoring\Shiny.Support.DeviceMonitoring.csproj" />
+        <ProjectReference Include="..\Shiny.Support.Repositories\Shiny.Support.Repositories.csproj" />
     </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('xamarin.ios')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\iOS\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\Uwp\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('monoandroid')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\Android\**\*.cs" />
-    </ItemGroup>
-
 </Project>

@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(DefaultTargetFrameworks)</TargetFrameworks>
+        <Description>Shiny BluetoothLE - Common components for Hosting and Client</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
+    </ItemGroup>
+</Project>

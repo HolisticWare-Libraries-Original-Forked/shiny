@@ -1,52 +1,16 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <TargetFrameworks>$(DefaultTargetFrameworks)</TargetFrameworks>
         <Description>Shiny Locations - bringing geofencing and GPS to a background service near you!</Description>
-        <TargetFrameworks>netstandard2.0;xamarin.ios10;monoandroid90</TargetFrameworks>
-        <TargetFrameworks Condition=" $(OS) == 'WINDOWS_NT' ">uap10.0.16299;$(TargetFrameworks)</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="readme.txt" pack="true" PackagePath="." />
-        <Compile Remove="Platforms\**\*.cs" />
-        <None Include="Platforms\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
         <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
+        <ProjectReference Include="..\Shiny.Support.Repositories\Shiny.Support.Repositories.csproj" />
+        <ProjectReference Include="..\Shiny.Support.Locations\Shiny.Support.Locations.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('xamarin.ios')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\*iOS*\**\*.cs" />
+    <ItemGroup Condition="'$(IsAndroidBuild)' == 'true'">
+        <PackageReference Include="Xamarin.GooglePlayServices.Location" Version="121.0.1.1" />
     </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('xamarin.watchos')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\*watchOS*\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('tizen')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\Tizen\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('uap')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\Uwp\**\*.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" $(TargetFramework.StartsWith('monoandroid')) ">
-        <ProjectReference Include="..\Shiny.Core\Shiny.Core.csproj" />
-        <Compile Include="Platforms\Shared\**\*.cs" />
-        <Compile Include="Platforms\Android\**\*.cs" />
-        <PackageReference Include="Xamarin.GooglePlayServices.Location" Version="[71.1600.0, 72)" />
-        <PackageReference Include="Xamarin.Android.Support.Compat" Version="[28.0.0.3, 29)" />
-    </ItemGroup>
-
 </Project>
