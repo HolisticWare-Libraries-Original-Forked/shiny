@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+        <TargetFrameworks>$(PlatformOnlyTargetFrameworks)</TargetFrameworks>
+        <Description>Xamarin Configuration Sources (Android/iOS) for Microsoft.Extensions.Configuration</Description>
+	</PropertyGroup>
+
+    <ItemGroup>
+        <None Include="Platforms\**\*.cs" />
+		<Compile Remove="Platforms\**\*.cs" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="$(MicrosoftExtensionsVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsVersion)" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(IsAndroidBuild)' == 'true'">
+		<PackageReference Include="Xamarin.AndroidX.Preference" Version="1.2.1.1" />
+    </ItemGroup>
+</Project>

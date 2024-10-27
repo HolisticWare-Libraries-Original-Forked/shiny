@@ -1,20 +1,45 @@
 ﻿using System;
+#if ANDROID
+using Android.App;
+#endif
+
+namespace Shiny.Push;
 
 
-namespace Shiny.Push
+public record FirebaseConfiguration(
+    /// <summary>
+    /// If you have included a GoogleService-Info.plist (iOS) or google-services.json (Android)
+    /// </summary>
+    bool UseEmbeddedConfiguration = true,
+
+    string? AppId = null,
+    string? SenderId = null,
+    string? ProjectId = null,
+    string? ApiKey = null
+
+#if ANDROID
+    , NotificationChannel? DefaultChannel = null
+    , string? IntentAction = null
+#endif
+)
 {
-    public class FirebaseConfiguration
+    public static FirebaseConfiguration Embedded { get; } = new(true);
+
+    public void AssertValid()
     {
-        public FirebaseConfiguration(string appId, string senderId, string apiKey)
-        {
-            this.AppId = appId ?? throw new ArgumentNullException(nameof(appId));
-            this.SenderId = senderId ?? throw new ArgumentNullException(nameof(senderId));
-            this.ApiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
-        }
+        if (this.UseEmbeddedConfiguration)
+            return;
 
+        if (this.AppId == null)
+            throw new ArgumentNullException(nameof(this.AppId));
 
-        public string AppId { get; }
-        public string SenderId { get; }
-        public string ApiKey { get; }
+        if (this.SenderId == null)
+            throw new ArgumentNullException(nameof(this.SenderId));
+
+        if (this.ApiKey == null)
+            throw new ArgumentNullException(nameof(this.ApiKey));
+
+        if (this.ProjectId == null)
+            throw new ArgumentNullException(nameof(this.ProjectId));
     }
 }
