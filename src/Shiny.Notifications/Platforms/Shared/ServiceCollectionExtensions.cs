@@ -1,66 +1,69 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shiny.Notifications;
 
+namespace Shiny;
 
-namespace Shiny
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    /// <summary>
+    /// Registers notification manager with Shiny
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddNotifications<TDelegate>(this IServiceCollection services) where TDelegate : INotificationDelegate
+        => services.AddNotifications(typeof(TDelegate));
+
+
+#if !ANDROID
+    /// <summary>
+    /// Registers notification manager with Shiny
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="delegateType"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddNotifications(this IServiceCollection services, Type? delegateType = null)
     {
-        public static bool UseNotifications(this IServiceCollection services,
-                                            Type? delegateType,
-                                            bool requestPermissionImmediately = false,
-                                            AndroidOptions? androidConfig = null,
-                                            UwpOptions? uwpConfig = null,
-                                            params NotificationCategory[] notificationCategories)
-        {
-#if NETSTANDARD
-            return false;
-#else
-            services.RegisterModule(new NotificationModule(
-                delegateType,
-                requestPermissionImmediately,
-                androidConfig,
-                uwpConfig,
-                notificationCategories
-            ));
-            return true;
-#endif
-        }
+        services.AddShinyService<NotificationManager>();
 
+        services.AddDefaultRepository();
+        if (!services.HasService<IChannelManager>())
+            services.AddShinyService<ChannelManager>();
 
-        public static bool UseNotifications<TNotificationDelegate>(this IServiceCollection services,
-                                                                   bool requestPermissionImmediately = false,
-                                                                   AndroidOptions? androidConfig = null,
-                                                                   UwpOptions? uwpConfig = null,
-                                                                   params NotificationCategory[] notificationCategories)
-                where TNotificationDelegate : class, INotificationDelegate
-            => services.UseNotifications(
-                typeof(TNotificationDelegate),
-                requestPermissionImmediately,
-                androidConfig,
-                uwpConfig,
-                notificationCategories
-            );
+        if (delegateType != null)
+            services.AddShinyService(delegateType);
 
-        public static bool UseNotifications(this IServiceCollection services,
-                                            bool requestPermissionImmediately = false,
-                                            AndroidOptions? androidConfig = null,
-                                            UwpOptions? uwpConfig = null,
-                                            params NotificationCategory[] notificationCategories)
-        {
-#if NETSTANDARD
-            return false;
-#else
-            services.RegisterModule(new NotificationModule(
-                null,
-                requestPermissionImmediately,
-                androidConfig,
-                uwpConfig,
-                notificationCategories
-            ));
-            return true;
-#endif
-        }
+        return services;
     }
+#else
+
+    /// <summary>
+    /// Registers notification manager with Shiny
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="delegateType"></param>
+    /// <param name="options"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddNotifications(this IServiceCollection services, Type? delegateType = null)
+    {
+        services.AddGeofencing<NotificationGeofenceDelegate>();
+        services.TryAddSingleton<AndroidNotificationProcessor>();
+        services.TryAddSingleton<AndroidNotificationManager>();
+        services.AddShinyService<NotificationManager>();
+
+        services.AddDefaultRepository();
+        if (!services.HasService<IChannelManager>())
+            services.AddShinyService<ChannelManager>();
+
+        if (delegateType != null)
+            services.AddShinyService(delegateType);
+
+        return services;
+    }
+
+#endif
 }

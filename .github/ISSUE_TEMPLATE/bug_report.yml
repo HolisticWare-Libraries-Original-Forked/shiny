@@ -1,0 +1,105 @@
+name: Bug Report
+description: You have found something wrong with Shiny
+title: "[Bug]: "
+labels: [bug, unverified]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for filing an issue.  Please only file issues against the LATEST STABLE or LATEST BETA version of Shiny from Nuget (ALPHAs are not accepted for issues).  If you are a sponsor, you can discuss issues with preview releases in the SponsorConnect Discord channel
+        If you have questions, please post them in GitHub discussions. 
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component/Nuget
+      description: The component you are filing against.  If it is not listed here it means there is no support for it
+      options:
+        - GPS or Geofencing (Shiny.Locations)
+        - Jobs (Shiny.Jobs)
+        - Configuration (Shiny.Extensions.Configuration)
+        - HTTP Transfers (Shiny.Net.Http)
+        - Notifications (Shiny.Notifications)
+        - Push - Native (Shiny.Push)
+        - Push - Azure Notification Hub (Shiny.Push.AzureNotificationHubs)
+        - BluetoothLE Client (Shiny.BluetoothLE)
+        - BluetoothLE Hosting (Shiny.BluetoothLE.Hosting)
+        - AppCenter Logging (Shiny.Logging.AppCenter)
+        - SQLite Logging (Shiny.Logging.Sqlite)
+        - Beacons (Shiny.Beacons)
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: operatingsystems
+    attributes:
+      label: What operating system(s) are effected?
+      description: You may select more than one
+      options:
+      - label: iOS (13+ supported)
+      - label: Mac Catalyst
+      - label: Android (10+ supported)
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Version(s) of Operation Systems
+  - type: checkboxes
+    id: platforms
+    attributes:
+      label: Hosting Model
+      description: You really should only select one of these
+      options:
+      #- label: Blazor
+      - label: MAUI
+      - label: Native/Classic Xamarin
+      - label: Manual
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: exception
+    attributes:
+      label: Exception or Log output
+      description: Please copy and paste any relevant log output
+  - type: input
+    id: codesample
+    attributes:
+      label: Reproducible Code Sample (should be Small, Shiny specific, Compile & Run)
+      description: A Public GitHub Repository Link
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/shinyorg/shiny/blob/master/.github/CODE_OF_CONDUCT.md)
+      options:
+        - label: I have supplied a reproducible sample that is small, shows the specific issue, compiles, runs, and is NOT FROM THE SHINY SAMPLES! 
+          required: true
+        - label: I am using the LATEST STABLE version from nuget (v3.3.4)
+          required: true
+        - label: I am Sponsor OR My GitHub account is 30+ days old
+          required: true
+        - label: I acknowledge that this is not technical support and that the maintainer(s) are not here as teachers or to diagnose logs
+          required: true
+        - label: I understand that this is not a paid product, it is FREE code that I am using, and that documentation may not be perfect. 
+          required: true
+        - label: I acknowledge that any form of swearing or general abuse towards the maintainer(s) will result in my immediate ban.
+          required: true

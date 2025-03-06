@@ -1,40 +1,131 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Android.App;
 using Android.Content;
-using Shiny.Infrastructure;
-using Shiny.Logging;
+using Microsoft.Extensions.Logging;
+using Shiny.Locations;
+using Shiny.Stores;
+using Shiny.Support.Repositories;
+
+namespace Shiny.Notifications;
 
 
-namespace Shiny.Notifications
+public class AndroidNotificationProcessor(
+    AndroidNotificationManager notificationManager,
+    IGeofenceManager geofenceManager,
+    IRepository repository,
+    ISerializer serializer,
+    ILogger<AndroidNotificationProcessor> logger,
+    IEnumerable<INotificationDelegate> delegates
+)
 {
-    class AndroidNotificationProcessor
+    public const string IntentNotificationKey = "ShinyNotification";
+    public const string IntentActionKey = "Action";
+    public const string RemoteInputResultKey = "Result";
+
+
+    public static string GetGeofenceId(Notification notification) => GeofenceKey + notification.Id.ToString();
+    const string GeofenceKey = "NOTIFICATION:";
+
+
+    public async Task TryProcessIntent(Intent? intent)
     {
-        public const string NOTIFICATION_KEY = "ShinyNotification";
-        readonly ISerializer serializer;
-        readonly INotificationDelegate ndelegate;
+        if (intent == null || !delegates.Any())
+            return;
 
-
-        public AndroidNotificationProcessor(ISerializer serializer, INotificationDelegate ndelegate)
+        if (intent.HasExtra(IntentNotificationKey))
         {
-            this.serializer = serializer;
-            this.ndelegate = ndelegate;
+            var notificationString = intent.GetStringExtra(IntentNotificationKey);
+            var notification = serializer.Deserialize<Notification>(notificationString);
+
+            var action = intent.GetStringExtra(IntentActionKey);
+            var text = RemoteInput.GetResultsFromIntent(intent)?.GetString("Result");
+            var response = new NotificationResponse(notification, action, text);
+
+            // the notification lives within the intent since it has already been removed from the repo
+            await delegates
+                .RunDelegates(
+                    x => x.OnEntry(response),
+                    logger
+                )
+                .ConfigureAwait(false);
+
+            notificationManager.NativeManager.Cancel(notification.Id);
         }
+    }
 
 
-        public async void TryProcessIntent(Intent intent)
+    public void ProcessPending()
+    {
+        // fire any missed/pending alarms?
+        var missed = repository.GetList<AndroidNotification>(
+            x => x.ScheduleDate != null &&
+            x.ScheduleDate < DateTime.UtcNow
+        );
+
+        foreach (var notification in missed)
         {
-            if (intent == null)
-                return;
+            notificationManager.Send(notification);
+            this.DeleteOrReschedule(notification);
+        }
+    }
 
-            if (!intent.HasExtra(NOTIFICATION_KEY))
-                return;
 
-            await Log.SafeExecute(async () =>
+    public async Task ProcessGeofence(GeofenceState newStatus, GeofenceRegion region)
+    {
+        // this is to match iOS behaviour
+        if (newStatus != GeofenceState.Entered || !region.Identifier.StartsWith(GeofenceKey))
+            return;
+
+        var notificationId = region.Identifier.Replace(GeofenceKey, String.Empty);
+        var notification = repository.Get<AndroidNotification>(notificationId);
+
+        if (notification?.Geofence != null)
+        {
+            notificationManager.Send(notification);
+
+            if (!notification.Geofence.Repeat)
             {
-                var notificationString = intent.GetStringExtra(NOTIFICATION_KEY);
-                var notification = this.serializer.Deserialize<Notification>(notificationString);
-                var response = new NotificationResponse(notification, null, null);
-                await this.ndelegate.OnEntry(response);
-            });
+                repository.Remove<AndroidNotification>(notificationId);
+                await geofenceManager
+                    .StopMonitoring(region.Identifier)
+                    .ConfigureAwait(false);
+            }
+        }
+    }
+
+
+    public void ProcessAlarm(Intent intent)
+    {
+        // get notification for alarm
+        var id = intent.GetIntExtra(IntentNotificationKey, 0);
+        if (id > 0)
+        {
+            var notification = repository.Get<AndroidNotification>(id.ToString());
+            if (notification != null)
+            {
+                notificationManager.Send(notification);
+                this.DeleteOrReschedule(notification);
+            }
+        }
+    }
+
+
+    void DeleteOrReschedule(Notification notification)
+    {
+        if (notification.RepeatInterval == null)
+        {
+            repository.Remove<AndroidNotification>(notification.Id.ToString());
+        }
+        else
+        {
+            // if repeating, set next time
+            notification.ScheduleDate = notification.RepeatInterval.CalculateNextAlarm();
+            repository.Set(notification);
+
+            notificationManager.SetAlarm(notification);
         }
     }
 }
